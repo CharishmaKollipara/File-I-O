@@ -1,0 +1,48 @@
+Question
+
+Counting the Word in the given file
+
+Tom's mam is preparing a puzzle for a school annual day. As part of it, Tom's mam has got a file that has information about knowledge. She needs to find out the total count of the word "knowledge"(CASE INSENSITIVE) from the file.  Tom wanted to help her teacher in completing the task easily by writing a java program and displaying the total count of the word "knowledge".Help Tom in implementing the task. 
+
+Note: Do not change the code skeleton
+
+
+
+FileDemo.java
+
+
+import java.io.FileInputStream;
+import java.util.regex.Pattern;
+import java.util.regex.Matcher;
+public class FileDemo
+{  
+public static void main(String[] args) throws Exception
+{
+FileInputStream fin = new FileInputStream("log.txt");
+
+String fileStr = "";
+int ch = 0;
+
+while((ch = fin.read()) != -1){
+    fileStr += (char)ch;
+}
+
+fileStr = fileStr.toLowerCase();
+
+int i = 0;
+Pattern p = Pattern.compile("knowledge");
+Matcher m = p.matcher(fileStr);
+while (m.find()) {
+    i++;
+}
+System.out.println(i);
+}
+}
+
+
+log.txt
+
+
+Knowledge is power
+No great work can be done without Knowledge
+More Knowledge a person gains, more powerful he becomes
