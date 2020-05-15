@@ -1,0 +1,146 @@
+Question
+
+Persist Employee
+
+John is planning to conduct performance appraisal for all the employees who reports to him.  For that he plans to conduct the appraisal  and store the details in a file.  Help him to do this by writing a java program.
+
+As he needs to preserve the details in File, use Streams in java.  To make the work easy, he needs to store all the data of employee as an employee object and also retrieve the details from the file as employee object.  So use the serialization concept to store and deserialization concept to retrieve the details.
+
+To do this, you are provided with a class, Employee with private attributes
+
+                int employeeId
+
+                String name
+
+                float  appraisalRating
+
+Getters, setters and the parameterized constructor are also provided.
+
+Create another public class EmployeeUtility which has the following methods :
+
+public  boolean  addEmployee(String fileName,ArrayList<Employee>  employeeList) -  This method should store all the employee objects in the list.  Store them in a file with the name provided as parameter.  Use serialization concept to preserve the employee details.
+
+Please ensure that you write the ArrayList directly in the file and not as individual objects
+
+public Employee viewEmployeeById(String fileName,int employeeId)  -  Use deserialization concept and read the employee objects from the file.  Return the employee with the Id provided as parameter.
+
+Write a public class Main with the main method.  Use the main method to check the correctness of the above methods.
+
+
+
+Employee.java
+
+
+import java.io.*;
+
+public class Employee implements Serializable{
+	
+	static final long serialVersionUID = 1L;
+	
+	private int employeeId;
+	private String name;
+	private float  appraisalRating;
+	
+	public Employee(int empid, String name,float  appraisalRating) {
+		
+		this.employeeId = empid;
+		this.name = name;
+		this.appraisalRating=appraisalRating;
+	}
+
+	public int getEmployeeId() {
+		return employeeId;
+	}
+
+	public void setEmployeeId(int employeeId) {
+		this.employeeId = employeeId;
+	}
+
+	public String getName() {
+		return name;
+	}
+
+	public void setName(String name) {
+		this.name = name;
+	}
+
+	public float getAppraisalRating() {
+		return appraisalRating;
+	}
+
+	public void setAppraisalRating(float appraisalRating) {
+		this.appraisalRating = appraisalRating;
+	}
+}
+
+
+EmployeeUtility.java
+
+
+import java.io.*;
+import java.util.*;
+
+public class EmployeeUtility {
+    
+    public boolean addEmployee(String fileName,ArrayList<Employee>  employeeList){
+        try {
+            FileOutputStream fos = new FileOutputStream(fileName);
+            ObjectOutputStream oos  = new ObjectOutputStream(fos);
+            
+            oos.writeObject(employeeList);
+            System.out.println("List Serialized...");
+            return true;
+        } catch(Exception e) {
+            return false;
+        } 
+    }
+    
+    public Employee viewEmployeeById(String fileName,int employeeId){
+        try {
+            FileInputStream fis = new FileInputStream(fileName);
+            ObjectInputStream oos  = new ObjectInputStream(fis);
+            
+            @SuppressWarnings("unchecked")
+            ArrayList<Employee>  employeeList = (ArrayList<Employee>)oos.readObject();
+            System.out.println("List Deserialized...");
+            
+            for(Employee emp : employeeList){
+                if(emp.getEmployeeId() == employeeId)
+                    return emp;
+            }
+            
+        } catch(Exception e) {
+        } 
+        return null;
+    }
+    
+}
+
+
+Main.java
+
+
+
+import java.util.*;
+
+public class Main{
+    public static void main(String args[]){
+        
+        Employee e1 = new Employee(1,"John Doe",1.3f);
+        Employee e2 = new Employee(2,"Jane Doe",1.5f);
+        Employee e3 = new Employee(3,"Mike Doe",1.2f);
+        
+        ArrayList<Employee> employeeList = new ArrayList<>();
+        employeeList.add(e1);
+        employeeList.add(e2);
+        employeeList.add(e3);
+        
+        EmployeeUtility empUtil = new EmployeeUtility();
+        
+        empUtil.addEmployee("serial.txt", employeeList);
+        
+        Employee emp = empUtil.viewEmployeeById("serial.txt",2);
+        System.out.println(emp.getEmployeeId());
+        
+    }
+}
